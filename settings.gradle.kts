@@ -3,3 +3,4 @@ plugins {
 }
 rootProject.name = "commit-attack-libraries"
 include("database")
+include("web")
