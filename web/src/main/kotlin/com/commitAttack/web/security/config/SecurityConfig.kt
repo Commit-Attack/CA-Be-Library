@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.lang.reflect.Method
 
 @Configuration
 @EnableWebSecurity
@@ -79,154 +80,141 @@ class SecurityConfig(
 
     @Throws(java.lang.Exception::class)
     fun HttpSecurity.applyDynamicUrlSecurity(applicationContext: ApplicationContext): HttpSecurity {
-        val controllers: Map<String, Any> = applicationContext.getBeansWithAnnotation(
-            Controller::class.java
-        )
-        for (controller in controllers.values) {
-            var parentPath: String? = null
-            val methods = controller.javaClass.declaredMethods
-            val requestMapping = controller.javaClass.getAnnotation(RequestMapping::class.java)
-            if(requestMapping != null && requestMapping.value.isNotEmpty()){
-                parentPath = requestMapping.value[0]
-            }
-            for (method in methods) {
-                if (method.isAnnotationPresent(CAGetMapping::class.java)){
-                    val CAGetMapping = method.getAnnotation(CAGetMapping::class.java)
-                    val paths = CAGetMapping.value // 또는 requestMapping.path();
-                    if(CAGetMapping.hasRole.isNotEmpty()) {
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.GET, parentPath).hasAnyRole(*CAGetMapping.hasRole)
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.GET, path).hasAnyRole(*CAGetMapping.hasRole)
-                            }
-                        }
-                    }else if(CAGetMapping.authenticated){
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.GET, parentPath).authenticated()
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.GET, path).authenticated()
-                            }
-                        }
-                    }
-                }
-                if (method.isAnnotationPresent(CAPostMapping::class.java)){
-                    val CAPostMapping = method.getAnnotation(CAPostMapping::class.java)
-                    val paths = CAPostMapping.value // 또는 requestMapping.path();
-                    if(CAPostMapping.hasRole.isNotEmpty()) {
-                        this.authorizeHttpRequests {
-                            if(paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.POST, parentPath).hasAnyRole(*CAPostMapping.hasRole)
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.POST, path).hasAnyRole(*CAPostMapping.hasRole)
-                            }
-                        }
-                    }else if(CAPostMapping.authenticated){
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.POST, parentPath).authenticated()
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.POST, path).authenticated()
-                            }
-                        }
-                    }
-                }
-                if (method.isAnnotationPresent(CAPatchMapping::class.java)){
-                    val CAPatchMapping = method.getAnnotation(CAPatchMapping::class.java)
-                    val paths = CAPatchMapping.value // 또는 requestMapping.path();
-                    if(CAPatchMapping.hasRole.isNotEmpty()) {
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.PATCH, parentPath).hasAnyRole(*CAPatchMapping.hasRole)
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.PATCH, path).hasAnyRole(*CAPatchMapping.hasRole)
-                            }
-                        }
-                    }else if(CAPatchMapping.authenticated){
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.PATCH, parentPath).authenticated()
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.PATCH, path).authenticated()
-                            }
-                        }
-                    }
-                }
-                if (method.isAnnotationPresent(CAPutMapping::class.java)){
-                    val CAPutMapping = method.getAnnotation(CAPutMapping::class.java)
-                    val paths = CAPutMapping.value // 또는 requestMapping.path();
-                    if(CAPutMapping.hasRole.isNotEmpty()) {
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.PUT, parentPath).hasAnyRole(*CAPutMapping.hasRole)
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.PUT, path).hasAnyRole(*CAPutMapping.hasRole)
-                            }
-                        }
-                    }else if(CAPutMapping.authenticated){
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.PUT, parentPath).authenticated()
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.PUT, path).authenticated()
-                            }
-                        }
-                    }
-                }
-                if (method.isAnnotationPresent(CADeleteMapping::class.java)){
-                    val CADeleteMapping = method.getAnnotation(CADeleteMapping::class.java)
-                    val paths = CADeleteMapping.value // 또는 requestMapping.path();
-                    if(CADeleteMapping.hasRole.isNotEmpty()) {
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.DELETE, parentPath).hasAnyRole(*CADeleteMapping.hasRole)
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.DELETE, path).hasAnyRole(*CADeleteMapping.hasRole)
-                            }
-                        }
-                    }else if(CADeleteMapping.authenticated){
-                        this.authorizeHttpRequests {
-                            if (paths.isEmpty()){
-                                it.requestMatchers(HttpMethod.DELETE, parentPath).authenticated()
-                            }
-                            paths.forEach { p ->
-                                var path = if(!p.startsWith("/")) "/$p" else p
-                                path = if (parentPath == null || parentPath == "null") p else parentPath+path
-                                it.requestMatchers(HttpMethod.DELETE, path).authenticated()
-                            }
-                        }
-                    }
-                }
+        val controllers: Map<String, Any> = applicationContext.getBeansWithAnnotation(Controller::class.java)
+
+        controllers.values.forEach { controller ->
+            val parentPath = controller.javaClass.getAnnotation(RequestMapping::class.java)
+                ?.value?.firstOrNull()
+
+            controller.javaClass.declaredMethods.forEach { method ->
+                processMethodSecurity(method, parentPath)
             }
         }
+
         return this
+    }
+
+    private fun HttpSecurity.processMethodSecurity(method: Method, parentPath: String?) {
+        when {
+            method.isAnnotationPresent(CAGetMapping::class.java) ->
+                processMapping(method.getAnnotation(CAGetMapping::class.java), HttpMethod.GET, parentPath)
+            method.isAnnotationPresent(CAPostMapping::class.java) ->
+                processMapping(method.getAnnotation(CAPostMapping::class.java), HttpMethod.POST, parentPath)
+            method.isAnnotationPresent(CAPatchMapping::class.java) ->
+                processMapping(method.getAnnotation(CAPatchMapping::class.java), HttpMethod.PATCH, parentPath)
+            method.isAnnotationPresent(CAPutMapping::class.java) ->
+                processMapping(method.getAnnotation(CAPutMapping::class.java), HttpMethod.PUT, parentPath)
+            method.isAnnotationPresent(CADeleteMapping::class.java) ->
+                processMapping(method.getAnnotation(CADeleteMapping::class.java), HttpMethod.DELETE, parentPath)
+        }
+    }
+
+    private fun <T : Annotation> HttpSecurity.processMapping(
+        annotation: T,
+        httpMethod: HttpMethod,
+        parentPath: String?
+    ) {
+        val mappingInfo = MappingInfo(
+            value = when (annotation) {
+                is CAGetMapping -> annotation.value
+                is CAPostMapping -> annotation.value
+                is CAPatchMapping -> annotation.value
+                is CAPutMapping -> annotation.value
+                is CADeleteMapping -> annotation.value
+                else -> emptyArray()
+            },
+            hasRole = when (annotation) {
+                is CAGetMapping -> annotation.hasRole
+                is CAPostMapping -> annotation.hasRole
+                is CAPatchMapping -> annotation.hasRole
+                is CAPutMapping -> annotation.hasRole
+                is CADeleteMapping -> annotation.hasRole
+                else -> emptyArray()
+            },
+            authenticated = when (annotation) {
+                is CAGetMapping -> annotation.authenticated
+                is CAPostMapping -> annotation.authenticated
+                is CAPatchMapping -> annotation.authenticated
+                is CAPutMapping -> annotation.authenticated
+                is CADeleteMapping -> annotation.authenticated
+                else -> false
+            },
+            httpMethod = httpMethod
+        )
+
+        applySecurityRules(mappingInfo, parentPath)
+    }
+
+    private fun HttpSecurity.applySecurityRules(mappingInfo: MappingInfo, parentPath: String?) {
+        when {
+            mappingInfo.hasRole.isNotEmpty() -> applyRoleBasedSecurity(mappingInfo, parentPath)
+            mappingInfo.authenticated -> applyAuthenticatedSecurity(mappingInfo, parentPath)
+        }
+    }
+
+    private fun HttpSecurity.applyRoleBasedSecurity(
+        mappingInfo: MappingInfo,
+        parentPath: String?
+    ) {
+        authorizeHttpRequests {
+            if (mappingInfo.value.isEmpty()) {
+                it.requestMatchers(mappingInfo.httpMethod, parentPath)
+                    .hasAnyRole(*mappingInfo.hasRole)
+            }
+            mappingInfo.value.forEach { path ->
+                val processedPath = processPath(path, parentPath)
+                it.requestMatchers(mappingInfo.httpMethod, processedPath)
+                    .hasAnyRole(*mappingInfo.hasRole)
+            }
+        }
+    }
+
+    private fun HttpSecurity.applyAuthenticatedSecurity(
+        mappingInfo: MappingInfo,
+        parentPath: String?
+    ) {
+        authorizeHttpRequests {
+            if (mappingInfo.value.isEmpty()) {
+                it.requestMatchers(mappingInfo.httpMethod, parentPath).authenticated()
+            }
+            mappingInfo.value.forEach { path ->
+                val processedPath = processPath(path, parentPath)
+                it.requestMatchers(mappingInfo.httpMethod, processedPath).authenticated()
+            }
+        }
+    }
+
+    private fun processPath(path: String, parentPath: String?): String {
+        val normalizedPath = if (!path.startsWith("/")) "/$path" else path
+        return if (parentPath == null || parentPath == "null") path else parentPath + normalizedPath
+    }
+
+    data class MappingInfo(
+        val value: Array<out String>,
+        val hasRole: Array<out String>,
+        val authenticated: Boolean,
+        val httpMethod: HttpMethod
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as MappingInfo
+
+            if (!value.contentEquals(other.value)) return false
+            if (!hasRole.contentEquals(other.hasRole)) return false
+            if (authenticated != other.authenticated) return false
+            if (httpMethod != other.httpMethod) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = value.contentHashCode()
+            result = 31 * result + hasRole.contentHashCode()
+            result = 31 * result + authenticated.hashCode()
+            result = 31 * result + httpMethod.hashCode()
+            return result
+        }
     }
 }
