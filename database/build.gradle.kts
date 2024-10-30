@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.commitAttack"
-version = "0.0.1"
+version = "0.0.4"
 
 val querydslVersion = "5.0.0"
 
@@ -12,7 +12,6 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
     // JPA
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     // ULID
@@ -25,14 +24,10 @@ dependencies {
 }
 
 allOpen {
-    annotation("jakarta.persistence.Entity")
-    annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
 noArg {
-    annotation("jakarta.persistence.Entity")
-    annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
 }
 

@@ -13,24 +13,25 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.io.Serializable
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class BasicBaseEntity : Persistable<UUID> {
+abstract class BasicBaseEntity : Persistable<String> {
     @Id
     @Column(name = "id")
-    private val id: UUID = UlidCreator.getMonotonicUlid().toUuid()
+    private val id: String = UlidCreator.getMonotonicUlid().toString()
 
     @CreatedDate
     @Column(name = "createdAt", nullable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    var createdAt: OffsetDateTime = OffsetDateTime.now()
         protected set
 
     @Transient
     private var _isNew = true
 
-    override fun getId(): UUID = id
+    override fun getId(): String = id
 
     override fun isNew(): Boolean = _isNew
 

@@ -38,6 +38,7 @@ subprojects{
     }
     dependencies {
         testApi("org.springframework.boot:spring-boot-starter-test")
+        testApi("org.jetbrains.kotlin:kotlin-test")
         testApi("org.springframework.security:spring-security-test")
         //kotest
         testApi("io.kotest:kotest-runner-junit5-jvm:5.8.0")

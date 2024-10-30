@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.commitAttack"
-version = "0.0.1"
+version = "0.0.3"
 
 java {
     withSourcesJar()
@@ -36,7 +36,7 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-starter-openfeign")
     //	coroutines
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    api(project(":database"))
+
     // validation
     api("org.springframework.boot:spring-boot-starter-validation")
 }

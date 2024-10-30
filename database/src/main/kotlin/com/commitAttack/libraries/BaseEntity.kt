@@ -6,6 +6,7 @@ import jakarta.persistence.MappedSuperclass
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
@@ -13,18 +14,18 @@ abstract class BaseEntity : BasicBaseEntity() {
 
     @LastModifiedDate
     @Column(name = "updatedAt", nullable = true)
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: OffsetDateTime? = null
         protected set
 
     @Column(name = "deletedAt", nullable = true)
-    var deletedAt: LocalDateTime? = null
+    var deletedAt: OffsetDateTime? = null
         protected set
 
     fun delete() {
-        deletedAt = LocalDateTime.now()
+        deletedAt = OffsetDateTime.now()
     }
 
     fun update() {
-        updatedAt = LocalDateTime.now()
+        updatedAt = OffsetDateTime.now()
     }
 }
