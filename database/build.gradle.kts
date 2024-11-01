@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.commitAttack"
-version = "0.0.4"
+version = "0.0.5"
 
 val querydslVersion = "5.0.0"
 

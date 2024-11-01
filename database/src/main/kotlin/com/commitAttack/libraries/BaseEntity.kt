@@ -13,11 +13,11 @@ import java.time.OffsetDateTime
 abstract class BaseEntity : BasicBaseEntity() {
 
     @LastModifiedDate
-    @Column(name = "updatedAt", nullable = true)
+    @Column(name = "\"updatedAt\"", nullable = true)
     var updatedAt: OffsetDateTime? = null
         protected set
 
-    @Column(name = "deletedAt", nullable = true)
+    @Column(name = "\"deletedAt\"", nullable = true)
     var deletedAt: OffsetDateTime? = null
         protected set
 

@@ -24,7 +24,7 @@ abstract class BasicBaseEntity : Persistable<String> {
     private val id: String = UlidCreator.getMonotonicUlid().toString()
 
     @CreatedDate
-    @Column(name = "createdAt", nullable = false)
+    @Column(name = "\"createdAt\"", nullable = false)
     var createdAt: OffsetDateTime = OffsetDateTime.now()
         protected set
 
