@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.commitAttack"
-version = "0.0.3"
+version = "0.0.5"
 
 java {
     withSourcesJar()

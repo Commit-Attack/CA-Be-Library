@@ -32,7 +32,7 @@ import java.lang.reflect.Method
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@ComponentScan(basePackages = ["com.commitAttack.web"])
+@ComponentScan(basePackages = ["com.commitAttack"])
 class SecurityConfig(
     private val applicationContext: ApplicationContext,
     private val jwtService: JwtService,

@@ -38,11 +38,10 @@ class JwtAuthenticationFilter(
 
     private fun getAuthentication(accessToken: String?): Authentication? {
         val claims = jwtService.getClaimsFromJwt(accessToken!!)
-        val userName: String = claims["userName"] as String
+        val userName: String = claims["name"] as String
         val userId: String = claims.subject
-        val userRole: String? = claims["role"] as String?
 
-        val userDetails = CAUserDetails(userId, userName, userRole, accessToken)
+        val userDetails = CAUserDetails(userId, userName, accessToken)
         return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
     }
 

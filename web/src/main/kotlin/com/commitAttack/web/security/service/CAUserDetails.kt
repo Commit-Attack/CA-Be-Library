@@ -7,15 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails
 class CAUserDetails(
     private val id: String,
     private val username: String,
-    private val role: String?,
     val userJwt: String? = null
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority?>? {
-        return if (role == "Admin")
-            listOf(SimpleGrantedAuthority("ROLE_ADMIN"))
-        else{
-            listOf(SimpleGrantedAuthority("ROLE_MEMBER"))
-        }
+        return listOf(SimpleGrantedAuthority("ROLE_MEMBER"))
     }
 
     override fun getPassword(): String? {
@@ -44,9 +39,5 @@ class CAUserDetails(
 
     fun getId(): String {
         return this.id
-    }
-
-    fun getRole(): String? {
-        return this.role
     }
 }
