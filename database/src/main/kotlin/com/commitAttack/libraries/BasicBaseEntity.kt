@@ -25,7 +25,7 @@ abstract class BasicBaseEntity : Persistable<String> {
 
     @CreatedDate
     @Column(name = "\"createdAt\"", nullable = false)
-    var createdAt: OffsetDateTime = OffsetDateTime.now()
+    var createdAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     @Transient

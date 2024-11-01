@@ -14,18 +14,18 @@ abstract class BaseEntity : BasicBaseEntity() {
 
     @LastModifiedDate
     @Column(name = "\"updatedAt\"", nullable = true)
-    var updatedAt: OffsetDateTime? = null
+    var updatedAt: LocalDateTime? = null
         protected set
 
     @Column(name = "\"deletedAt\"", nullable = true)
-    var deletedAt: OffsetDateTime? = null
+    var deletedAt: LocalDateTime? = null
         protected set
 
     fun delete() {
-        deletedAt = OffsetDateTime.now()
+        deletedAt = LocalDateTime.now()
     }
 
     fun update() {
-        updatedAt = OffsetDateTime.now()
+        updatedAt = LocalDateTime.now()
     }
 }
